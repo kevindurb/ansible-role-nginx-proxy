@@ -2,7 +2,7 @@
 dependencies: []
 
 galaxy_info:
-  role_name: nginx-proxy
+  role_name: nginx_proxy
   author: kevindurb
   description: Builds basic configuration to run nginx as a reverse proxy
   license: MIT
