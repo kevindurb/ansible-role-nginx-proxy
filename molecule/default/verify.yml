@@ -1,0 +1,36 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: start nginx container
+      docker_container:
+        name: nginx
+        image: nginx
+        recreate: yes
+        networks:
+          - name: molecule_verify
+        ports:
+          - "8080:80"
+        volumes:
+          - "~/nginx/nginx.conf:/etc/nginx/nginx.conf"
+          - "~/nginx/sites-available:/etc/nginx/sites-available"
+          - "~/nginx/sites-enabled:/etc/nginx/sites-enabled"
+          - "~/nginx/includes:/etc/nginx/includes"
+
+    - name: start whoami container
+      docker_container:
+        name: whoami
+        image: jwilder/whoami
+        recreate: yes
+        networks:
+          - name: molecule_verify
+
+    - name: verify nginx proxies requests to whoami.local
+      uri:
+        url: http://127.0.0.1:8080
+        return_content: yes
+        headers:
+          Host: 'whoami.localhost'
+      register: this
+      failed_when: "'I\\'m' not in this.content"

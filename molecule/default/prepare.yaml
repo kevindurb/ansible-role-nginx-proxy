@@ -1,0 +1,54 @@
+---
+- name: Prepare - install dependencies
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: install docker and pip
+      become: yes
+      apt:
+        update_cache: yes
+        name:
+          - docker.io
+          - python3-pip
+
+    - name: start docker
+      systemd:
+        state: started
+        name: docker
+
+    - name: create docker group
+      become: yes
+      group:
+        name: docker
+        state: present
+
+    - name: add vagrant user to docker group
+      become: yes
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+    - name: reboot to apply user changes
+      become: yes
+      reboot:
+
+- name: Prepare - Pull docker images
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: install docker pip package
+      pip:
+        name: docker
+
+    - name: create docker network
+      docker_network:
+        name: molecule_verify
+
+    - name: pull required images
+      with_items:
+        - nginx
+        - jwilder/whoami
+      docker_image:
+        source: pull
+        name: "{{ item }}"

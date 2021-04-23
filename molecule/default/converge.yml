@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    nginx_proxy_nginx_conf_dir: ~/nginx
+
+    nginx_proxy_sites_available:
+      - name: whoami
+        https: false
+        force_https: false
+        host: whoami.localhost
+        proxy_pass: http://whoami:8000
+
+    nginx_proxy_sites_enabled:
+      - whoami
+
+  tasks:
+    - name: "Include ansible-role-nginx-proxy"
+      include_role:
+        name: "ansible-role-nginx-proxy"

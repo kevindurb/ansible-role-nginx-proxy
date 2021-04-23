@@ -33,6 +33,6 @@
 - name: symlink sites_enabled into conf dir
   with_items: "{{ nginx_proxy_sites_enabled }}"
   file:
-    src: "{{ nginx_proxy_nginx_conf_dir + '/sites-available/' + item + '.conf' }}"
+    src: "{{ '../sites-available/' + item + '.conf' }}"
     dest: "{{ nginx_proxy_nginx_conf_dir + '/sites-enabled/' + item + '.conf' }}"
     state: link
