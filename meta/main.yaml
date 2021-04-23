@@ -1,0 +1,8 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: kevindurb
+  description: Builds basic configuration to run nginx as a reverse proxy
+  license: MIT
+  min_ansible_version: 2.9
